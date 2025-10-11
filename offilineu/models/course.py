@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from models.directory_node import DirectoryNode
+from offilineu.models.directory_node import DirectoryNode
 
 
 @dataclass

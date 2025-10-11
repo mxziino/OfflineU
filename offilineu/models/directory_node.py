@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, List, Dict
 
-from models.lesson import Lesson
+from offilineu.models.lesson import Lesson
 
 
 @dataclass

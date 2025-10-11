@@ -2,10 +2,10 @@ import re
 from pathlib import Path
 from typing import Optional, Dict, Any
 
-from models.course import Course
-from models.directory_node import DirectoryNode
-from models.lesson import Lesson
-from utils.supported_extensions import *
+from offilineu.models.course import Course
+from offilineu.models.directory_node import DirectoryNode
+from offilineu.models.lesson import Lesson
+from offilineu.utils.supported_extensions import *
 
 
 class DynamicCourseParser:

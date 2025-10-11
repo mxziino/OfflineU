@@ -3,9 +3,9 @@ import os
 from datetime import datetime
 from typing import Dict, Any
 
-from models.course import Course
-from models.directory_node import DirectoryNode
-from services.dynamic_course_parser import DynamicCourseParser
+from offilineu.models.course import Course
+from offilineu.models.directory_node import DirectoryNode
+from offilineu.services.dynamic_course_parser import DynamicCourseParser
 
 
 class ProgressTracker:
