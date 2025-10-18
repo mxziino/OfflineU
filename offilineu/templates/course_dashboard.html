@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +36,31 @@
             color: #007acc;
             text-align: center;
             font-size: 2.5em;
+        }
+
+        #course_history {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .course-item{
+            box-sizing: border-box;
+            background: blue;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 12px;
+            min-width: 200px;
+           margin-bottom: 10px;
+           text-align: center;
+        }
+        .course-item a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
         }
 
         .nav {
@@ -343,6 +369,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <div class="container">
@@ -351,15 +378,15 @@
     </div>
 
     {% if course %}
-        <div class="nav">
-            <div class="container">
-                <a href="/reset_course">← Select Different Course</a>
-                <a href="#stats">Progress</a>
-                <span style="color: #666; margin-left: auto;">
-                    {{ stats.total_lessons }} lessons
-                </span>
-            </div>
+    <div class="nav">
+        <div class="container">
+            <a href="/reset_course">← Select Different Course</a>
+            <a href="#stats">Progress</a>
+            <span style="color: #666; margin-left: auto;">
+                {{ stats.total_lessons }} lessons
+            </span>
         </div>
+    </div>
 
         <div class="container">
             <div class="card">
@@ -441,113 +468,160 @@
             </div>
         </div>
     {% else %}
-        <div class="container">
-            <div class="course-selector">
-                <h2>Select a Course</h2>
-                <p>Enter the full path to your course directory:</p>
-                <div style="margin: 20px 0;">
-                    <input type="text" id="course-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse">
-                    <button onclick="loadCourseFromPath()" class="btn">Load Course</button>
-                </div>
-                
-                <div id="course-status" style="margin-top: 10px;"></div>
-                
-                <p style="margin-top: 20px; font-size: 12px; color: #999;">
-                    <strong>Examples:</strong><br>
-                    • C:\Users\YourName\Documents\MyCourse<br>
-                    • D:\Courses\Python Tutorial<br>
-                    • C:\Downloads\Udemy Course
-                </p>
+    <div class="container">
+        <div class="course-selector">
+            <h2>Select a Course</h2>
+            <p>Enter the full path to your course directory:</p>
+            <div style="margin: 20px 0;">
+                <input type="text" id="course-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse">
+                <button onclick="loadCourseFromPath()" class="btn">Load Course</button>
             </div>
 
-            <div style="margin-top: 40px;">
-                <div class="card">
-                    <h3>How to Use OfflineU:</h3>
-                    <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
-                        <li><strong>Prepare your course files</strong> in a directory structure</li>
-                        <li><strong>Copy the full path</strong> to your course directory</li>
-                        <li><strong>Paste the path</strong> in the input field above</li>
-                        <li><strong>Click "Load Course"</strong> or press Enter</li>
-                        <li><strong>Start learning!</strong> Your progress will be saved automatically</li>
-                    </ul>
+            <div id="course-status" style="margin-top: 10px;"></div>
+
+            <p style="margin-top: 20px; font-size: 12px; color: #999;">
+                <strong>Examples:</strong><br>
+                • C:\Users\YourName\Documents\MyCourse<br>
+                • D:\Courses\Python Tutorial<br>
+                • C:\Downloads\Udemy Course
+            </p>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <div class="card">
+                <h3>Courses:</h3>
+                <div style="margin: 20px 0;">
+                    {% if courses_directory %}
+                    <input type="hidden" id="courses-path" value="{{ courses_directory }}">
+                    {% else %}
+                    <input type="text" id="courses-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse">
+                    <button onclick="loadCoursesFromPath()" class="btn">Load Courses</button>
+                    {% endif %}
                 </div>
-                
-                <div class="card">
-                    <h3>Supported File Types:</h3>
-                    <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
-                        <li><strong>Videos:</strong> .mp4, .mkv, .avi, .mov, .webm</li>
-                        <li><strong>Audio:</strong> .mp3, .wav, .m4a, .aac</li>
-                        <li><strong>Documents:</strong> .txt, .md, .html, .pdf</li>
-                        <li><strong>Subtitles:</strong> .srt, .vtt</li>
-                    </ul>
-                </div>
+                <ul id="course_history" style="margin-top:10px; list-style:none; padding-left:20px;">
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>How to Use OfflineU:</h3>
+                <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
+                    <li><strong>Prepare your course files</strong> in a directory structure</li>
+                    <li><strong>Copy the full path</strong> to your course directory</li>
+                    <li><strong>Paste the path</strong> in the input field above</li>
+                    <li><strong>Click "Load Course"</strong> or press Enter</li>
+                    <li><strong>Start learning!</strong> Your progress will be saved automatically</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Supported File Types:</h3>
+                <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
+                    <li><strong>Videos:</strong> .mp4, .mkv, .avi, .mov, .webm</li>
+                    <li><strong>Audio:</strong> .mp3, .wav, .m4a, .aac</li>
+                    <li><strong>Documents:</strong> .txt, .md, .html, .pdf</li>
+                    <li><strong>Subtitles:</strong> .srt, .vtt</li>
+                </ul>
             </div>
         </div>
+    </div>
     {% endif %}
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('courses-path');
+            if (input != null && input.value.length > 0) {
+                loadCoursesFromPath();
+            }
+        });
+
         function toggleTree(element) {
             console.log('Toggle clicked:', element);
-            
+
             // Find the content div that comes after this header
             const content = element.nextElementSibling;
             const toggle = element.querySelector('.tree-toggle');
-            
+
             console.log('Content element:', content);
             console.log('Toggle element:', toggle);
-            
+
             if (content && content.classList.contains('tree-content')) {
                 const isExpanded = content.classList.contains('expanded');
                 content.classList.toggle('expanded');
-                
+
                 if (toggle) {
                     toggle.textContent = content.classList.contains('expanded') ? '▼' : '▶';
                 }
-                
+
                 console.log('Toggled tree, expanded:', content.classList.contains('expanded'));
             } else {
                 console.log('No content element found or not tree-content');
             }
         }
+        var loadCoursesFromPath = () => {
+            const coursesPath = document.getElementById('courses-path').value.trim();
+            const courseHistoryList = document.getElementById('course_history');
+            fetch(`/browse?path=${encodeURIComponent(coursesPath)}`)
+                .then(response => response.json())
+                .then(data => {
+                    courseHistoryList.innerHTML = '';
+                    const coursesCandidates = data.directories.filter(course => course.is_course_candidate);
+                    coursesCandidates.forEach(course => {
+                        const li = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = '#';
+                        link.textContent = course.name;
+                        li.className = 'course-item';
+                        link.onclick = () => {
+                            document.getElementById('course-path').value = course.path;
+                            loadCourseFromPath();
+                        };
+                        li.appendChild(link);
+                        courseHistoryList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading courses:', error);
+                });
 
+        }
         function loadCourseFromPath() {
             const pathInput = document.getElementById('course-path');
             const statusDiv = document.getElementById('course-status');
             const coursePath = pathInput.value.trim();
-            
+
             if (!coursePath) {
                 statusDiv.innerHTML = '<p style="color: #ff6b6b;">Please enter a course path.</p>';
                 return;
             }
-            
+
             // Show loading status
             statusDiv.innerHTML = '<p style="color: #007acc;">Loading course...</p>';
-            
+
             fetch('/load_course', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({course_path: coursePath})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ course_path: coursePath })
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    statusDiv.innerHTML = '<p style="color: #28a745;">Course loaded successfully! Redirecting...</p>';
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    statusDiv.innerHTML = `<p style="color: #ff6b6b;">Error: ${data.error}</p>`;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading course:', error);
-                statusDiv.innerHTML = '<p style="color: #ff6b6b;">Error loading course. Please check the path and try again.</p>';
-            });
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        statusDiv.innerHTML = '<p style="color: #28a745;">Course loaded successfully! Redirecting...</p>';
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        statusDiv.innerHTML = `<p style="color: #ff6b6b;">Error: ${data.error}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading course:', error);
+                    statusDiv.innerHTML = '<p style="color: #ff6b6b;">Error loading course. Please check the path and try again.</p>';
+                });
         }
-        
+
         // Allow Enter key to submit
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const pathInput = document.getElementById('course-path');
             if (pathInput) {
-                pathInput.addEventListener('keypress', function(e) {
+                pathInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         loadCourseFromPath();
                     }
@@ -556,4 +630,5 @@
         });
     </script>
 </body>
+
 </html>

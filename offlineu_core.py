@@ -22,7 +22,6 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     parser.add_argument('--create-templates', action='store_true', help='Create basic templates')
     parser.add_argument('course_path', nargs='?', help='Path to course directory')
-
     args = parser.parse_args()
 
     # Create templates if requested
