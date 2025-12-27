@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>OfflineU - {{ course.name }}</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .container { max-width: 1200px; margin: 0 auto; }
+            .module { margin: 20px 0; border: 1px solid #ddd; padding: 15px; }
+            .lesson { padding: 8px; margin: 5px 0; border-left: 4px solid #ddd; }
+            .lesson.completed { border-left-color: #4CAF50; background-color: #f8fff8; }
+            .lesson a { text-decoration: none; color: #333; }
+            .lesson:hover { background-color: #f0f0f0; }
+            .progress { background-color: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden; }
+            .progress-bar { background-color: #4CAF50; height: 100%; transition: width 0.3s; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>{{ course.name }}</h1>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ stats.completion_percentage }}%"></div>
+            </div>
+            <p>Progress: {{ stats.completed_lessons }}/{{ stats.total_lessons }} lessons ({{ stats.completion_percentage }}%)</p>
+    
+            {% for module_idx, module in course.modules|enumerate %}
+            <div class="module">
+                <h2>{{ module.title }}</h2>
+                {% for lesson_idx, lesson in module.lessons|enumerate %}
+                <div class="lesson {% if lesson.completed %}completed{% endif %}">
+                    <a href="/lesson/{{ module_idx }}/{{ lesson_idx }}">
+                        {{ lesson.title }} 
+                        <small>({{ lesson.lesson_type }})</small>
+                        {% if lesson.completed %}✓{% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+    
+            <p><a href="/reset_course">Select Different Course</a></p>
+        </div>
+    </body>
+    </html>

@@ -51,8 +51,16 @@ class DynamicCourseParser:
         )
 
         try:
-            # Get all items in current directory
-            items = sorted(current_path.iterdir(), key=lambda x: (x.is_file(), x.name.lower()))
+            # Natural sort key: extract leading number for sorting
+            def natural_sort_key(item):
+                name = item.name
+                # Try to extract leading number
+                match = re.match(r'^(\d+)', name)
+                num = int(match.group(1)) if match else 999999
+                return (item.is_file(), num, name.lower())
+            
+            # Get all items in current directory with natural sorting
+            items = sorted(current_path.iterdir(), key=natural_sort_key)
 
             for item in items:
                 if item.name.startswith('.'):
@@ -111,6 +119,9 @@ class DynamicCourseParser:
             text_files.append(relative_path)
             if any(indicator in filename for indicator in QUIZ_INDICATORS):
                 lesson_type = 'quiz'
+        elif ext in ARCHIVE_EXTENSIONS:
+            text_files.append(relative_path)
+            lesson_type = 'text'  # Archives shown as downloadable resources
         else:
             # Skip unsupported file types
             return None
@@ -132,9 +143,9 @@ class DynamicCourseParser:
     @staticmethod
     def _clean_lesson_name(name: str) -> str:
         """Clean up lesson name for display"""
-        # Remove common patterns
-        name = re.sub(r'^\d+[.\-_\s]*', '', name)  # Remove leading numbers
-        name = re.sub(r'[-_]+', ' ', name)  # Replace dashes/underscores with spaces
+        # Replace dashes/underscores with spaces (but keep leading numbers)
+        name = re.sub(r'[-_]+', ' ', name)
+        # Capitalize words
         name = ' '.join(word.capitalize() for word in name.split() if word)
         return name if name.strip() else "Untitled Lesson"
 

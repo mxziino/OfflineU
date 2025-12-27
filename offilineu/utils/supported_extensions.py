@@ -3,4 +3,5 @@ VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.webm', '.m4v', '.flv', '.w
 AUDIO_EXTENSIONS = {'.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac'}
 SUBTITLE_EXTENSIONS = {'.srt', '.vtt', '.ass', '.sub', '.sbv'}
 TEXT_EXTENSIONS = {'.txt', '.md', '.html', '.htm', '.pdf', '.docx', '.doc', '.rtf'}
+ARCHIVE_EXTENSIONS = {'.zip', '.rar', '.7z', '.tar', '.gz'}
 QUIZ_INDICATORS = {'quiz', 'exam', 'test', 'assessment', 'exercise', 'assignment', 'homework'}

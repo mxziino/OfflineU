@@ -6,6 +6,7 @@ from offilineu.routes.dashboard_routes import dashboard_bp
 from offilineu.routes.files_routes import files_bp
 from offilineu.routes.lesson_routes import lesson_bp
 from offilineu.routes.progress_routes import progress_bp
+from offilineu.routes.api_routes import api_bp
 
 
 class Setup:
@@ -18,4 +19,6 @@ class Setup:
         app.register_blueprint(lesson_bp)
         app.register_blueprint(files_bp)
         app.register_blueprint(progress_bp)
+        app.register_blueprint(api_bp)  # New API routes for React frontend
         return app
+

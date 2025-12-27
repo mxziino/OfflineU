@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>{{ lesson.title }} - {{ course.name }}</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .container { max-width: 1000px; margin: 0 auto; }
+            video, audio { width: 100%; max-width: 800px; }
+            .content { margin: 20px 0; }
+            .navigation { margin: 20px 0; }
+            button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+            .file-link { display: block; margin: 5px 0; padding: 5px; background: #f0f0f0; text-decoration: none; color: #333; }
+            .file-link:hover { background: #e0e0e0; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>{{ lesson.title }}</h1>
+            <div class="navigation">
+                <a href="/">← Back to Course</a>
+                <button onclick="markCompleted()">Mark as Completed</button>
+            </div>
+    
+            <div class="content">
+                {% if lesson.video_file %}
+                <h3>Video</h3>
+                <video controls preload="metadata" id="video-player">
+                    <source src="/files/{{ lesson.video_file }}" type="video/mp4">
+                    {% if lesson.subtitle_file %}
+                    <track kind="subtitles" src="/files/{{ lesson.subtitle_file }}" srclang="en" label="English">
+                    {% endif %}
+                    Your browser does not support the video tag.
+                </video>
+                {% endif %}
+    
+                {% if lesson.audio_file %}
+                <h3>Audio</h3>
+                <audio controls preload="metadata" id="audio-player">
+                    <source src="/files/{{ lesson.audio_file }}" type="audio/mp3">
+                    Your browser does not support the audio tag.
+                </audio>
+                {% endif %}
+    
+                {% if lesson.text_files %}
+                <h3>Additional Resources</h3>
+                {% for text_file in lesson.text_files %}
+                <a href="/files/{{ text_file }}" class="file-link" target="_blank">
+                    📄 {{ text_file.split('/')[-1] }}
+                </a>
+                {% endfor %}
+                {% endif %}
+            </div>
+    
+            <script>
+                function markCompleted() {
+                    fetch('/api/progress', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            lesson_path: '{{ lesson_path }}',
+                            completed: true,
+                            progress_seconds: getProgressSeconds()
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('lesson.py marked as completed!');
+                            window.location.href = '/';
+                        }
+                    });
+                }
+    
+                function getProgressSeconds() {
+                    const video = document.getElementById('video-player');
+                    const audio = document.getElementById('audio-player');
+                    if (video && !video.paused) return Math.floor(video.currentTime);
+                    if (audio && !audio.paused) return Math.floor(audio.currentTime);
+                    return 0;
+                }
+    
+                // Auto-save progress periodically
+                setInterval(() => {
+                    const seconds = getProgressSeconds();
+                    if (seconds > 0) {
+                        fetch('/api/progress', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                lesson_path: '{{ lesson_path }}',
+                                completed: false,
+                                progress_seconds: seconds
+                            })
+                        });
+                    }
+                }, 30000); // Save every 30 seconds
+            </script>
+        </div>
+    </body>
+    </html>

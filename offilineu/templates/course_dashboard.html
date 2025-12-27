@@ -47,16 +47,17 @@
             list-style: none;
         }
 
-        .course-item{
+        .course-item {
             box-sizing: border-box;
             background: blue;
             border: 1px solid #444;
             border-radius: 4px;
             padding: 12px;
             min-width: 200px;
-           margin-bottom: 10px;
-           text-align: center;
+            margin-bottom: 10px;
+            text-align: center;
         }
+
         .course-item a {
             color: #e0e0e0;
             text-decoration: none;
@@ -285,11 +286,30 @@
             text-transform: uppercase;
         }
 
-        .lesson-type.video { background: #e74c3c; color: white; }
-        .lesson-type.audio { background: #9b59b6; color: white; }
-        .lesson-type.text { background: #34495e; color: white; }
-        .lesson-type.quiz { background: #f39c12; color: white; }
-        .lesson-type.mixed { background: #16a085; color: white; }
+        .lesson-type.video {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .lesson-type.audio {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .lesson-type.text {
+            background: #34495e;
+            color: white;
+        }
+
+        .lesson-type.quiz {
+            background: #f39c12;
+            color: white;
+        }
+
+        .lesson-type.mixed {
+            background: #16a085;
+            color: white;
+        }
 
         .status-icon {
             font-size: 1.2em;
@@ -367,6 +387,199 @@
                 margin-left: 15px;
             }
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: #2d2d2d;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: #007acc;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: #444;
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb-item {
+            color: #007acc;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .breadcrumb-item:hover {
+            background: #333;
+        }
+
+        .breadcrumb-separator {
+            color: #666;
+        }
+
+        .folder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #3d3d3d;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .folder-item:hover {
+            background: #4d4d4d;
+            transform: translateX(5px);
+        }
+
+        .folder-item.course-candidate {
+            border-left-color: #28a745;
+            background: linear-gradient(90deg, rgba(40, 167, 69, 0.1), transparent);
+        }
+
+        .folder-item.course-candidate:hover {
+            background: linear-gradient(90deg, rgba(40, 167, 69, 0.2), #4d4d4d);
+        }
+
+        .folder-item.parent-folder {
+            border-left-color: #007acc;
+            background: #333;
+        }
+
+        .folder-icon {
+            font-size: 1.3em;
+            margin-right: 12px;
+        }
+
+        .folder-info {
+            flex: 1;
+        }
+
+        .folder-name {
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        .folder-meta {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .folder-badge {
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-path-display {
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #888;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .btn-select-folder {
+            background: #28a745;
+            white-space: nowrap;
+        }
+
+        .btn-select-folder:hover {
+            background: #218838;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
     </style>
 </head>
 
@@ -388,102 +601,107 @@
         </div>
     </div>
 
-        <div class="container">
-            <div class="card">
-                <h2>{{ course.name }}</h2>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <strong>{{ stats.completed_lessons }}/{{ stats.total_lessons }}</strong> lessons completed
-                    </div>
-                    <div style="color: #007acc; font-size: 1.2em;">
-                        {{ "%.1f"|format(stats.completion_percentage) }}%
-                    </div>
+    <div class="container">
+        <div class="card">
+            <h2>{{ course.name }}</h2>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <strong>{{ stats.completed_lessons }}/{{ stats.total_lessons }}</strong> lessons completed
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: {{ stats.completion_percentage }}%;"></div>
+                <div style="color: #007acc; font-size: 1.2em;">
+                    {{ "%.1f"|format(stats.completion_percentage) }}%
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ stats.completion_percentage }}%;"></div>
+            </div>
+
+            {% if stats.last_accessed_path %}
+            <div class="last-accessed">
+                <strong>Last Accessed:</strong> {{ stats.last_accessed_path }}
+                <a href="/lesson/{{ stats.last_accessed_path }}" class="btn" style="margin-left: 10px;">
+                    Continue
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="tree-container">
+            {% macro render_tree_node(node, depth=0) %}
+            <div class="tree-item">
+                <div class="tree-header directory" onclick="toggleTree(this)">
+                    <div class="tree-title">
+                        <span class="tree-icon">📁</span>
+                        <span class="tree-name">{{ node.name }}</span>
+                        <span class="tree-stats">
+                            {{ (node.children|length + node.lessons|length) }} items
+                        </span>
+                    </div>
+                    {% if node.children or node.lessons %}
+                    <button class="tree-toggle">▶</button>
+                    {% endif %}
                 </div>
 
-                {% if stats.last_accessed_path %}
-                <div class="last-accessed">
-                    <strong>Last Accessed:</strong> {{ stats.last_accessed_path }}
-                    <a href="/lesson/{{ stats.last_accessed_path }}" class="btn" style="margin-left: 10px;">
-                        Continue
-                    </a>
+                {% if node.children or node.lessons %}
+                <div class="tree-content">
+                    {% for child_name, child_node in node.children.items() %}
+                    {{ render_tree_node(child_node, depth + 1) }}
+                    {% endfor %}
+
+                    {% for lesson in node.lessons %}
+                    {% set lesson_relative_path = lesson.path|replace('\\', '/')|replace(course.path|replace('\\', '/'),
+                    '')|replace('//', '/')|replace('/', '', 1) %}
+                    <div class="lesson-item {% if lesson.completed %}completed{% endif %}"
+                        onclick="window.location.href='/lesson/{{ lesson_relative_path }}/{{ lesson.title|replace(' ', '_') }}'">
+                        <div class="lesson-title">
+                            <span class="lesson-icon">
+                                {% if lesson.lesson_type == 'video' %}🎥
+                                {% elif lesson.lesson_type == 'audio' %}🎵
+                                {% elif lesson.lesson_type == 'quiz' %}📝
+                                {% elif lesson.lesson_type == 'mixed' %}📦
+                                {% else %}📄{% endif %}
+                            </span>
+                            {{ lesson.title }}
+                        </div>
+                        <div class="lesson-meta">
+                            <span class="lesson-type {{ lesson.lesson_type }}">{{ lesson.lesson_type|title }}</span>
+                            {% if lesson.completed %}
+                            <span class="status-icon completed">✓</span>
+                            {% else %}
+                            <span class="status-icon pending">○</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>
+            {% endmacro %}
 
-            <div class="tree-container">
-                {% macro render_tree_node(node, depth=0) %}
-                <div class="tree-item">
-                    <div class="tree-header directory" onclick="toggleTree(this)">
-                        <div class="tree-title">
-                            <span class="tree-icon">📁</span>
-                            <span class="tree-name">{{ node.name }}</span>
-                            <span class="tree-stats">
-                                {{ (node.children|length + node.lessons|length) }} items
-                            </span>
-                        </div>
-                        {% if node.children or node.lessons %}
-                        <button class="tree-toggle">▶</button>
-                        {% endif %}
-                    </div>
-                    
-                    {% if node.children or node.lessons %}
-                    <div class="tree-content">
-                        {% for child_name, child_node in node.children.items() %}
-                            {{ render_tree_node(child_node, depth + 1) }}
-                        {% endfor %}
-                        
-                        {% for lesson in node.lessons %}
-                        {% set lesson_relative_path = lesson.path|replace('\\', '/')|replace(course.path|replace('\\', '/'), '')|replace('//', '/')|replace('/', '', 1) %}
-                        <div class="lesson-item {% if lesson.completed %}completed{% endif %}"
-                             onclick="window.location.href='/lesson/{{ lesson_relative_path }}/{{ lesson.title|replace(' ', '_') }}'">
-                            <div class="lesson-title">
-                                <span class="lesson-icon">
-                                    {% if lesson.lesson_type == 'video' %}🎥
-                                    {% elif lesson.lesson_type == 'audio' %}🎵
-                                    {% elif lesson.lesson_type == 'quiz' %}📝
-                                    {% elif lesson.lesson_type == 'mixed' %}📦
-                                    {% else %}📄{% endif %}
-                                </span>
-                                {{ lesson.title }}
-                            </div>
-                            <div class="lesson-meta">
-                                <span class="lesson-type {{ lesson.lesson_type }}">{{ lesson.lesson_type|title }}</span>
-                                {% if lesson.completed %}
-                                <span class="status-icon completed">✓</span>
-                                {% else %}
-                                <span class="status-icon pending">○</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {% endmacro %}
-                
-                {{ render_tree_node(course.root_node) }}
-            </div>
+            {{ render_tree_node(course.root_node) }}
         </div>
+    </div>
     {% else %}
     <div class="container">
         <div class="course-selector">
-            <h2>Select a Course</h2>
-            <p>Enter the full path to your course directory:</p>
-            <div style="margin: 20px 0;">
-                <input type="text" id="course-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse">
+            <h2>📚 Select a Course</h2>
+            <p>Browse your folders or enter the path to your course directory:</p>
+            <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="course-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse"
+                    style="flex: 1; min-width: 300px;">
+                <button onclick="openFolderBrowser()" class="btn btn-secondary"
+                    style="display: flex; align-items: center; gap: 8px;">
+                    📂 Browse Folders
+                </button>
                 <button onclick="loadCourseFromPath()" class="btn">Load Course</button>
             </div>
 
             <div id="course-status" style="margin-top: 10px;"></div>
 
             <p style="margin-top: 20px; font-size: 12px; color: #999;">
-                <strong>Examples:</strong><br>
-                • C:\Users\YourName\Documents\MyCourse<br>
-                • D:\Courses\Python Tutorial<br>
-                • C:\Downloads\Udemy Course
+                <strong>💡 Tip:</strong> Click "Browse Folders" to visually navigate to your course directory.
+                Folders with media files are highlighted in green.
             </p>
         </div>
 
@@ -628,7 +846,175 @@
                 });
             }
         });
+
+        // ============================================
+        // Folder Browser Modal Functions
+        // ============================================
+        let currentBrowsePath = '';
+
+        function openFolderBrowser() {
+            const modal = document.getElementById('folder-browser-modal');
+            modal.classList.add('active');
+            // Start from root/drives
+            loadFolderContents('');
+        }
+
+        function closeFolderBrowser() {
+            const modal = document.getElementById('folder-browser-modal');
+            modal.classList.remove('active');
+        }
+
+        function loadFolderContents(path) {
+            currentBrowsePath = path;
+            const folderList = document.getElementById('folder-list');
+            const breadcrumb = document.getElementById('folder-breadcrumb');
+            const currentPathDisplay = document.getElementById('current-path-display');
+
+            // Show loading
+            folderList.innerHTML = '<div class="loading-spinner">📂 Loading folders...</div>';
+
+            fetch(`/browse?path=${encodeURIComponent(path)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        folderList.innerHTML = `<div class="loading-spinner" style="color: #ff6b6b;">⚠️ ${data.error}</div>`;
+                        return;
+                    }
+
+                    currentBrowsePath = data.current_path;
+                    currentPathDisplay.textContent = data.current_path;
+
+                    // Render breadcrumb
+                    renderBreadcrumb(data.current_path, data.parent_path);
+
+                    // Render folder list
+                    renderFolderList(data.directories, data.parent_path);
+                })
+                .catch(error => {
+                    console.error('Error loading folders:', error);
+                    folderList.innerHTML = '<div class="loading-spinner" style="color: #ff6b6b;">⚠️ Error loading folders</div>';
+                });
+        }
+
+        function renderBreadcrumb(currentPath, parentPath) {
+            const breadcrumb = document.getElementById('folder-breadcrumb');
+
+            if (!currentPath || currentPath === 'Select a Drive') {
+                breadcrumb.innerHTML = '<span class="breadcrumb-item" onclick="loadFolderContents(\'\')">🖥️ Drives</span>';
+                return;
+            }
+
+            // Split path into parts
+            const parts = currentPath.split(/[\\\/]/).filter(p => p);
+            let html = '<span class="breadcrumb-item" onclick="loadFolderContents(\'\')">🖥️</span>';
+
+            let pathSoFar = '';
+            parts.forEach((part, index) => {
+                pathSoFar += (index === 0 && currentPath.includes(':')) ? part + '\\' : '\\' + part;
+                if (index === 0 && currentPath.includes(':')) {
+                    pathSoFar = part + '\\';
+                }
+                html += `<span class="breadcrumb-separator">›</span>`;
+                html += `<span class="breadcrumb-item" onclick="loadFolderContents('${pathSoFar.replace(/\\/g, '\\\\')}')">${part}</span>`;
+            });
+
+            breadcrumb.innerHTML = html;
+        }
+
+        function renderFolderList(directories, parentPath) {
+            const folderList = document.getElementById('folder-list');
+            let html = '';
+
+            // Parent folder link
+            if (parentPath) {
+                html += `
+                    <div class="folder-item parent-folder" onclick="loadFolderContents('${parentPath.replace(/\\/g, '\\\\')}')">
+                        <span class="folder-icon">⬆️</span>
+                        <div class="folder-info">
+                            <div class="folder-name">..</div>
+                            <div class="folder-meta">Go to parent folder</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Folder items
+            directories.forEach(dir => {
+                const escapedPath = dir.path.replace(/\\/g, '\\\\');
+                const isCourseCandidate = dir.is_course_candidate;
+
+                html += `
+                    <div class="folder-item ${isCourseCandidate ? 'course-candidate' : ''}" 
+                         onclick="loadFolderContents('${escapedPath}')">
+                        <span class="folder-icon">${isCourseCandidate ? '📚' : '📁'}</span>
+                        <div class="folder-info">
+                            <div class="folder-name">${dir.name}</div>
+                            ${dir.media_files > 0
+                        ? `<div class="folder-meta">${dir.media_files} media file${dir.media_files > 1 ? 's' : ''} found</div>`
+                        : ''}
+                        </div>
+                        ${isCourseCandidate ? '<span class="folder-badge">Course</span>' : ''}
+                    </div>
+                `;
+            });
+
+            if (directories.length === 0 && !parentPath) {
+                html = '<div class="loading-spinner">No folders found</div>';
+            }
+
+            folderList.innerHTML = html;
+        }
+
+        function selectCurrentFolder() {
+            if (currentBrowsePath && currentBrowsePath !== 'Select a Drive') {
+                // Set the path in the input field
+                document.getElementById('course-path').value = currentBrowsePath;
+                // Close the modal
+                closeFolderBrowser();
+                // Optionally auto-load the course
+                loadCourseFromPath();
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function (e) {
+            const modal = document.getElementById('folder-browser-modal');
+            if (e.target === modal) {
+                closeFolderBrowser();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeFolderBrowser();
+            }
+        });
     </script>
+
+    <!-- Folder Browser Modal -->
+    <div id="folder-browser-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📂 Browse Folders</h2>
+                <button class="modal-close" onclick="closeFolderBrowser()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="folder-breadcrumb" class="breadcrumb">
+                    <span class="breadcrumb-item">Loading...</span>
+                </div>
+                <div id="folder-list" class="folder-list">
+                    <div class="loading-spinner">📂 Loading folders...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span id="current-path-display" class="current-path-display">Select a folder</span>
+                <button class="btn btn-select-folder" onclick="selectCurrentFolder()">
+                    ✓ Select This Folder
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
