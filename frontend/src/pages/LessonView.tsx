@@ -171,6 +171,15 @@ export function LessonView() {
         setIsCompleted(true);
     };
 
+    // Resume from saved position when media loads
+    const handleLoadedMetadata = () => {
+        if (!mediaRef.current || !lesson?.progress_seconds) return;
+        // Only resume if not completed and we have saved progress
+        if (lesson.progress_seconds > 0 && !lesson.completed) {
+            mediaRef.current.currentTime = lesson.progress_seconds;
+        }
+    };
+
     const navigateToLesson = (path: string) => {
         navigate(`/lesson/${encodeURIComponent(path)}`);
     };
@@ -271,6 +280,7 @@ export function LessonView() {
                                     className="max-h-[calc(100vh-160px)] w-auto max-w-full mx-auto rounded-lg bg-black shadow-lg"
                                     onTimeUpdate={handleTimeUpdate}
                                     onEnded={handleEnded}
+                                    onLoadedMetadata={handleLoadedMetadata}
                                 >
                                     <source src={getFileUrl(lesson.video_file)} type="video/mp4" />
                                     {lesson.subtitle_file && (
@@ -296,6 +306,7 @@ export function LessonView() {
                                     className="w-full"
                                     onTimeUpdate={handleTimeUpdate}
                                     onEnded={handleEnded}
+                                    onLoadedMetadata={handleLoadedMetadata}
                                 >
                                     <source src={getFileUrl(lesson.audio_file)} type="audio/mp3" />
                                 </audio>
