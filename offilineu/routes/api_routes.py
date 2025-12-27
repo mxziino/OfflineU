@@ -16,6 +16,7 @@ from offilineu.services.stats_service import (
     get_dashboard_stats, get_weekly_stats, get_monthly_stats,
     get_completion_history, get_streak
 )
+from offilineu.services.notes_service import get_note, save_note, delete_note
 from offilineu.utils.current_course import get_current_course, set_current_course
 from offilineu.utils.supported_extensions import VIDEO_EXTENSIONS, AUDIO_EXTENSIONS
 from offilineu.models.directory_node import DirectoryNode
@@ -400,4 +401,63 @@ def get_stats_streak():
         streak = get_streak()
         return jsonify({'streak': streak})
     except Exception as e:
+        return jsonfy({'error': str(e)}), 500
+
+
+# ============================================
+# Notes endpoints
+# ============================================
+
+@api_bp.route('/notes', methods=['GET'])
+def get_lesson_note():
+    """Get note for a specific lesson."""
+    course_path = request.args.get('course_path')
+    lesson_path = request.args.get('lesson_path')
+    
+    if not course_path or not lesson_path:
+        return jsonify({'error': 'Missing course_path or lesson_path'}), 400
+    
+    note = get_note(course_path, lesson_path)
+    if note:
+        return jsonify(note)
+    else:
+        return jsonify({'content': ''})  # Return empty content if no note exists
+
+
+@api_bp.route('/notes', methods=['PUT'])
+def save_lesson_note():
+    """Save or update a note for a lesson."""
+    data = request.json
+    course_path = data.get('course_path')
+    lesson_path = data.get('lesson_path')
+    content = data.get('content', '')
+    obsidian_vault_path = data.get('obsidian_vault_path')
+    
+    if not course_path or not lesson_path:
+        return jsonify({'error': 'Missing course_path or lesson_path'}), 400
+    
+    try:
+        result = save_note(course_path, lesson_path, content, obsidian_vault_path)
+        return jsonify(result)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@api_bp.route('/notes', methods=['DELETE'])
+def delete_lesson_note():
+    """Delete a note for a lesson."""
+    data = request.json
+    course_path = data.get('course_path')
+    lesson_path = data.get('lesson_path')
+    
+    if not course_path or not lesson_path:
+        return jsonify({'error': 'Missing course_path or lesson_path'}), 400
+    
+    success = delete_note(course_path, lesson_path)
+    if success:
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Note not found'}), 404
+

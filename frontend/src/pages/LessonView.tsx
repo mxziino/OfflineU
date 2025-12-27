@@ -9,12 +9,13 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { getCourseInfo, getLessonDetails, updateProgress, getFileUrl } from '@/lib/api';
+import { MarkdownEditor } from '@/components/MarkdownEditor';
+import { getCourseInfo, getLessonDetails, updateProgress, getFileUrl, getNote, saveNote } from '@/lib/api';
 import type { Lesson, DirectoryNode, Course, CourseStats, LessonItem } from '@/types/api';
 import {
     ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, Circle,
     PanelRightClose, PanelRightOpen, Video, Music, FileText,
-    ChevronDown, ChevronRight as ChevronRightIcon, FolderOpen, Copy
+    ChevronDown, ChevronRight as ChevronRightIcon, FolderOpen, Copy, StickyNote
 } from 'lucide-react';
 
 export function LessonView() {
@@ -33,8 +34,21 @@ export function LessonView() {
     const [stats, setStats] = useState<CourseStats | null>(null);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
+    // Notes state
+    const [noteContent, setNoteContent] = useState('');
+    const [isSavingNote, setIsSavingNote] = useState(false);
+
     const mediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
     const lastSaveTime = useRef(0);
+    const autoSaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+    // Debounced autosave
+    const handleAutoSave = (content: string) => {
+        if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+        autoSaveTimer.current = setTimeout(() => {
+            handleSaveNote(content);
+        }, 2000);
+    };
 
     // Load lesson details
     useEffect(() => {
@@ -49,7 +63,12 @@ export function LessonView() {
             }
             setLoading(false);
         });
-    }, [lessonPath]);
+
+        // Load note for this lesson
+        if (course?.path) {
+            getNote(course.path, lessonPath).then(setNoteContent);
+        }
+    }, [lessonPath, course]);
 
     // Load course info for sidebar
     useEffect(() => {
@@ -112,6 +131,21 @@ export function LessonView() {
                 setCourse(data.course);
                 setStats(data.stats);
             }
+        }
+    };
+
+    const handleSaveNote = async (content: string) => {
+        if (!lessonPath || !course?.path) return;
+
+        setIsSavingNote(true);
+        try {
+            // TODO: Allow user to configure Obsidian vault path in settings
+            await saveNote(course.path, lessonPath, content);
+            setNoteContent(content);
+        } catch (error) {
+            console.error('Failed to save note:', error);
+        } finally {
+            setIsSavingNote(false);
         }
     };
 
@@ -221,7 +255,7 @@ export function LessonView() {
             <div className="flex">
                 {/* Main Content Area - always centered */}
                 <main className="flex-1 min-w-0">
-                    <div className="max-w-4xl mx-auto p-6 space-y-6">
+                    <div className="w-full p-6 space-y-6">
                         {/* Mobile title */}
                         <div className="sm:hidden">
                             <h1 className="text-xl font-bold">{lesson.title}</h1>
@@ -234,7 +268,7 @@ export function LessonView() {
                                     ref={mediaRef as React.RefObject<HTMLVideoElement>}
                                     controls
                                     preload="metadata"
-                                    className="w-full rounded-lg bg-black aspect-video"
+                                    className="max-h-[calc(100vh-160px)] w-auto max-w-full mx-auto rounded-lg bg-black shadow-lg"
                                     onTimeUpdate={handleTimeUpdate}
                                     onEnded={handleEnded}
                                 >
@@ -314,13 +348,31 @@ export function LessonView() {
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
                         </div>
+
+                        {/* Notes Section */}
+                        <div className="mt-8 border-t pt-6 mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <StickyNote className="h-5 w-5" />
+                                    My Notes
+                                </h3>
+                                {isSavingNote && <span className="text-sm text-muted-foreground animate-pulse">Saving...</span>}
+                            </div>
+                            <div className="h-[600px] border rounded-lg overflow-hidden bg-card">
+                                <MarkdownEditor
+                                    initialContent={noteContent}
+                                    onSave={handleSaveNote}
+                                    onContentChange={handleAutoSave}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </main>
 
                 {/* Sidebar - Course Content */}
                 {sidebarOpen && course && activeSubCourse && (
                     <aside
-                        className="fixed right-0 top-[53px] bottom-0 border-l bg-card overflow-hidden flex flex-col"
+                        className="sticky top-[53px] h-[calc(100vh-53px)] border-l bg-card overflow-hidden flex flex-col shrink-0"
                         style={{ width: sidebarWidth }}
                     >
                         {/* Sidebar Header */}

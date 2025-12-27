@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 # Current schema version
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def run_migrations(conn: sqlite3.Connection):
@@ -30,6 +30,7 @@ def run_migrations(conn: sqlite3.Connection):
         (1, migrate_v1_initial_schema),
         (2, migrate_v2_course_cache),
         (3, migrate_v3_add_tags),
+        (4, migrate_v4_lesson_notes),
     ]
     
     for version, migration_fn in migrations:
@@ -136,3 +137,23 @@ def migrate_v3_add_tags(conn: sqlite3.Connection):
     conn.execute("""
         ALTER TABLE library ADD COLUMN tags TEXT DEFAULT '[]'
     """)
+
+
+def migrate_v4_lesson_notes(conn: sqlite3.Connection):
+    """Add lesson notes table for markdown notes."""
+    
+    # Lesson notes table - stores markdown notes per lesson
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS lesson_notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            library_id INTEGER NOT NULL,
+            lesson_path TEXT NOT NULL,
+            content TEXT DEFAULT '',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (library_id) REFERENCES library(id) ON DELETE CASCADE,
+            UNIQUE(library_id, lesson_path)
+        )
+    """)
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_notes_library ON lesson_notes(library_id)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_notes_path ON lesson_notes(lesson_path)")

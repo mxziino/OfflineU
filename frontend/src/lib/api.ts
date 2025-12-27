@@ -157,3 +157,42 @@ export async function getStreak(): Promise<number> {
         return 0;
     }
 }
+
+// ============================================
+// Notes API
+// ============================================
+
+export async function getNote(coursePath: string, lessonPath: string): Promise<string> {
+    try {
+        const res = await fetch(`${API_BASE}/api/notes?course_path=${encodeURIComponent(coursePath)}&lesson_path=${encodeURIComponent(lessonPath)}`);
+        if (!res.ok) return '';
+        const data = await res.json();
+        return data.content || '';
+    } catch {
+        return '';
+    }
+}
+
+export async function saveNote(coursePath: string, lessonPath: string, content: string, obsidianVaultPath?: string): Promise<void> {
+    await fetch(`${API_BASE}/api/notes`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            course_path: coursePath,
+            lesson_path: lessonPath,
+            content,
+            obsidian_vault_path: obsidianVaultPath
+        }),
+    });
+}
+
+export async function deleteNote(coursePath: string, lessonPath: string): Promise<void> {
+    await fetch(`${API_BASE}/api/notes`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            course_path: coursePath,
+            lesson_path: lessonPath
+        }),
+    });
+}
