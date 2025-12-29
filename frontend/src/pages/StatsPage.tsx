@@ -33,13 +33,20 @@ export function StatsPage({ onBack }: StatsPageProps) {
         return `${hours}h ${mins}m`;
     };
 
+    const getLocalDateString = (date: Date = new Date()): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // Generate last 7 days for the activity chart
     const getLast7Days = (): string[] => {
         const days = [];
         for (let i = 6; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
-            days.push(d.toISOString().split('T')[0]);
+            days.push(getLocalDateString(d));
         }
         return days;
     };
@@ -177,33 +184,51 @@ export function StatsPage({ onBack }: StatsPageProps) {
                         <CardDescription>Lessons completed each day</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-end justify-between gap-2 h-32">
+                        <div className="flex items-end justify-between gap-2 h-48 pt-4">
                             {last7Days.map((date) => {
                                 const dayStat = weeklyMap.get(date);
                                 const count = dayStat?.lessons_completed || 0;
                                 const maxCount = Math.max(...last7Days.map(d => weeklyMap.get(d)?.lessons_completed || 0), 1);
-                                const height = count > 0 ? Math.max((count / maxCount) * 100, 10) : 5;
-                                const dayName = new Date(date).toLocaleDateString('en', { weekday: 'short' });
-                                const isToday = date === new Date().toISOString().split('T')[0];
+                                // Ensure a minimum visual height for non-zero values so they are visible
+                                const percentage = count > 0 ? (count / maxCount) * 100 : 0;
+                                // Visual height: if 0, show small 'track' or nothing? Code used 5% for empty.
+                                // Let's make 0 count have a very small height or just be a track.
+                                const height = count > 0 ? Math.max(percentage, 5) : 4;
+
+                                // Parse as local date to ensure day name matches current locale day
+                                const dayDate = new Date(date + 'T00:00:00');
+                                const dayName = dayDate.toLocaleDateString('en', { weekday: 'short' });
+                                const isToday = date === getLocalDateString();
 
                                 return (
-                                    <div key={date} className="flex-1 flex flex-col items-center gap-2">
-                                        <div
-                                            className="w-full rounded-t-md transition-all duration-300"
-                                            style={{
-                                                height: `${height}%`,
-                                                backgroundColor: count > 0
-                                                    ? isToday ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.6)'
-                                                    : 'hsl(var(--muted))'
-                                            }}
-                                        />
-                                        <div className="text-center">
-                                            <p className={`text-xs ${isToday ? 'font-bold text-primary' : 'text-muted-foreground'}`}>
+                                    <div key={date} className="flex-1 h-full flex flex-col items-center justify-end group">
+                                        {/* Bar Track Area */}
+                                        <div className="flex-1 w-full flex items-end justify-center pb-2 relative">
+                                            {/* Tooltip / Value Bubble on hover could go here */}
+
+                                            {/* The Bar */}
+                                            <div
+                                                className={`w-full max-w-[2.5rem] rounded-t-md transition-all duration-500 ease-out 
+                                                    ${count > 0
+                                                        ? isToday ? 'bg-primary' : 'bg-primary/80 hover:bg-primary'
+                                                        : 'bg-muted/30'
+                                                    }`}
+                                                style={{
+                                                    height: `${height}%`
+                                                }}
+                                            >
+                                                {/* Floating number for non-zero bars */}
+                                            </div>
+                                        </div>
+
+                                        {/* Label Area */}
+                                        <div className="h-10 text-center flex flex-col justify-start">
+                                            <p className={`text-xs uppercase font-medium mb-0.5 ${isToday ? 'text-primary font-bold' : 'text-muted-foreground'}`}>
                                                 {dayName}
                                             </p>
-                                            {count > 0 && (
-                                                <p className="text-xs font-medium">{count}</p>
-                                            )}
+                                            <p className={`text-xs font-semibold leading-none ${count > 0 ? 'text-foreground' : 'text-transparent'}`}>
+                                                {count > 0 ? count : '-'}
+                                            </p>
                                         </div>
                                     </div>
                                 );
