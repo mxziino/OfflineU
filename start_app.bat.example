@@ -1,0 +1,31 @@
+@echo off
+REM OfflineU Startup Script
+REM =======================
+
+REM CONFIGURATION
+REM Set this to the FULL PATH of your database file.
+REM If you want to use the default location, leave it blank.
+REM User provided path: G:\Mi unidad\offlineudb
+REM We append \offlineu.db assuming the user meant a folder.
+set OFFLINEU_DB_PATH=G:\Mi unidad\offlineudb\offlineu.db
+
+echo [OfflineU] Starting application...
+echo [OfflineU] Database configuration:
+if "%OFFLINEU_DB_PATH%"=="" (
+    echo    Using default location (~/.offlineu/offlineu.db)
+) else (
+    echo    Using custom path: %OFFLINEU_DB_PATH%
+)
+
+REM Start Backend (Flask)
+REM We run from the current directory so python can find the 'offilineu' package
+echo [OfflineU] Launching Backend...
+start "OfflineU Backend" cmd /k "python -m flask --app offilineu:create_app run --port 5000"
+
+REM Start Frontend (Vite)
+echo [OfflineU] Launching Frontend...
+cd frontend
+start "OfflineU Frontend" cmd /k "npm run dev"
+
+echo [OfflineU] Done. Check the new windows for status.
+pause

@@ -9,8 +9,14 @@ from typing import Optional
 from contextlib import contextmanager
 
 # Database location
-DB_DIR = Path.home() / '.offlineu'
-DB_PATH = DB_DIR / 'offlineu.db'
+# Database location
+custom_db_path = os.environ.get('OFFLINEU_DB_PATH')
+if custom_db_path:
+    DB_PATH = Path(custom_db_path)
+    DB_DIR = DB_PATH.parent
+else:
+    DB_DIR = Path.home() / '.offlineu'
+    DB_PATH = DB_DIR / 'offlineu.db'
 
 # Connection pool (single connection for SQLite)
 _connection: Optional[sqlite3.Connection] = None

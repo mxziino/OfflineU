@@ -22,3 +22,5 @@ class Setup:
         app.register_blueprint(api_bp)  # New API routes for React frontend
         return app
 
+create_app = Setup.create_app
+
